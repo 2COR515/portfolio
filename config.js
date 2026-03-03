@@ -30,7 +30,7 @@ const CONFIG = {
     ],
     heroAccentWord: "Stories.",  // The gradient-highlighted word
     heroDescription: "I'm Trevor Kimathi, an IT specialist and creative professional who bridges technical precision with compelling visual storytelling.",
-    profileImage: "",           // e.g. "assets/Me (2).jpg" — leave "" for placeholder
+    profileImage: "assets/Me(2).jpg",
     cvFile: "",                 // e.g. "assets/Trevor_Kimathi_CV.pdf" — leave "" to hide download
   },
 
@@ -216,7 +216,7 @@ const CONFIG = {
       title: "Orah School",
       description: "A comprehensive full-stack educational management platform built with JavaScript, featuring multi-role dashboards (student, instructor, admin), real-time attendance tracking, AI-powered chatbot integration, lesson management with video support, analytics dashboards, messaging systems, and theme customization.",
       category: "dev",
-      image: "assets/ orah school2.png",
+      image: "assets/orah school2.png",
       icon: "fas fa-laptop-code",
       tags: ["React", "Node.js", "Full-Stack"],
       links: [
