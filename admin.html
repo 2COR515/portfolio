@@ -1,0 +1,2133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Portfolio Admin Panel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <style>
+    /* ── Admin Panel Styles ── */
+    :root {
+      --admin-bg: #0f1117;
+      --admin-surface: #1a1d27;
+      --admin-surface-2: #232733;
+      --admin-border: #2e3344;
+      --admin-text: #e4e4e7;
+      --admin-text-dim: #9ca3af;
+      --admin-accent: #6366f1;
+      --admin-accent-hover: #818cf8;
+      --admin-success: #22c55e;
+      --admin-danger: #ef4444;
+      --admin-warning: #f59e0b;
+      --admin-radius: 10px;
+      --admin-transition: 0.2s ease;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: "Inter", sans-serif;
+      background: var(--admin-bg);
+      color: var(--admin-text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* ── Layout ── */
+    .admin-layout {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* ── Sidebar ── */
+    .sidebar {
+      width: 260px;
+      background: var(--admin-surface);
+      border-right: 1px solid var(--admin-border);
+      padding: 24px 0;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      overflow-y: auto;
+      z-index: 100;
+    }
+
+    .sidebar-brand {
+      padding: 0 24px 24px;
+      border-bottom: 1px solid var(--admin-border);
+      margin-bottom: 16px;
+    }
+
+    .sidebar-brand h1 {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--admin-text);
+    }
+
+    .sidebar-brand h1 i {
+      color: var(--admin-accent);
+      margin-right: 8px;
+    }
+
+    .sidebar-brand p {
+      font-size: 12px;
+      color: var(--admin-text-dim);
+      margin-top: 4px;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+      padding: 0 12px;
+    }
+
+    .sidebar-nav li a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--admin-text-dim);
+      text-decoration: none;
+      transition: var(--admin-transition);
+      cursor: pointer;
+    }
+
+    .sidebar-nav li a:hover {
+      background: var(--admin-surface-2);
+      color: var(--admin-text);
+    }
+
+    .sidebar-nav li a.active {
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--admin-accent);
+    }
+
+    .sidebar-nav li a i {
+      width: 20px;
+      text-align: center;
+      font-size: 15px;
+    }
+
+    .sidebar-divider {
+      height: 1px;
+      background: var(--admin-border);
+      margin: 12px 24px;
+    }
+
+    /* ── Main Content ── */
+    .main-content {
+      flex: 1;
+      margin-left: 260px;
+      padding: 32px 40px;
+      min-height: 100vh;
+    }
+
+    /* ── Header ── */
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--admin-border);
+    }
+
+    .admin-header h2 {
+      font-size: 24px;
+      font-weight: 700;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+    }
+
+    /* ── Buttons ── */
+    .btn-admin {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      border: none;
+      cursor: pointer;
+      transition: var(--admin-transition);
+      font-family: inherit;
+    }
+
+    .btn-save {
+      background: var(--admin-accent);
+      color: white;
+    }
+
+    .btn-save:hover {
+      background: var(--admin-accent-hover);
+    }
+
+    .btn-preview {
+      background: var(--admin-surface-2);
+      color: var(--admin-text);
+      border: 1px solid var(--admin-border);
+    }
+
+    .btn-preview:hover {
+      border-color: var(--admin-accent);
+    }
+
+    .btn-danger {
+      background: rgba(239, 68, 68, 0.15);
+      color: var(--admin-danger);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+    }
+
+    .btn-danger:hover {
+      background: rgba(239, 68, 68, 0.25);
+    }
+
+    .btn-add {
+      background: rgba(99, 102, 241, 0.1);
+      color: var(--admin-accent);
+      border: 1px dashed var(--admin-accent);
+      width: 100%;
+      justify-content: center;
+      padding: 14px;
+    }
+
+    .btn-add:hover {
+      background: rgba(99, 102, 241, 0.2);
+    }
+
+    .btn-sm {
+      padding: 6px 12px;
+      font-size: 12px;
+    }
+
+    /* ── Tab Panels ── */
+    .tab-panel {
+      display: none;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    /* ── Cards ── */
+    .admin-card {
+      background: var(--admin-surface);
+      border: 1px solid var(--admin-border);
+      border-radius: var(--admin-radius);
+      padding: 24px;
+      margin-bottom: 20px;
+    }
+
+    .admin-card h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .admin-card h3 i {
+      color: var(--admin-accent);
+      font-size: 14px;
+    }
+
+    /* ── Form Elements ── */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .form-row.three {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .form-row.single {
+      grid-template-columns: 1fr;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--admin-text-dim);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px 14px;
+      background: var(--admin-surface-2);
+      border: 1px solid var(--admin-border);
+      border-radius: 8px;
+      color: var(--admin-text);
+      font-size: 14px;
+      font-family: inherit;
+      transition: var(--admin-transition);
+      outline: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      border-color: var(--admin-accent);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .form-group input[type="color"] {
+      height: 44px;
+      padding: 4px;
+      cursor: pointer;
+    }
+
+    .form-hint {
+      font-size: 12px;
+      color: var(--admin-text-dim);
+      margin-top: 4px;
+    }
+
+    /* ── Image Upload ── */
+    .image-upload {
+      border: 2px dashed var(--admin-border);
+      border-radius: var(--admin-radius);
+      padding: 32px;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--admin-transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .image-upload:hover {
+      border-color: var(--admin-accent);
+      background: rgba(99, 102, 241, 0.05);
+    }
+
+    .image-upload.has-image {
+      padding: 0;
+      border-style: solid;
+    }
+
+    .image-upload img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .image-upload .upload-text {
+      color: var(--admin-text-dim);
+    }
+
+    .image-upload .upload-text i {
+      font-size: 32px;
+      color: var(--admin-accent);
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .image-upload .upload-text p {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .image-upload .upload-text span {
+      font-size: 12px;
+      color: var(--admin-text-dim);
+    }
+
+    .image-upload input[type="file"] {
+      display: none;
+    }
+
+    .image-remove {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: var(--admin-danger);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 5;
+    }
+
+    /* ── Repeater Items ── */
+    .repeater-item {
+      background: var(--admin-surface-2);
+      border: 1px solid var(--admin-border);
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+
+    .repeater-item .repeater-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .repeater-item .repeater-header h4 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--admin-text);
+    }
+
+    .repeater-actions {
+      display: flex;
+      gap: 6px;
+    }
+
+    /* ── Color Picker Grid ── */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 16px;
+    }
+
+    .color-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--admin-surface-2);
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--admin-border);
+    }
+
+    .color-item input[type="color"] {
+      width: 44px;
+      height: 44px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      padding: 2px;
+      background: transparent;
+    }
+
+    .color-item .color-label {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .color-item .color-hex {
+      font-size: 12px;
+      color: var(--admin-text-dim);
+      font-family: monospace;
+    }
+
+    /* ── Tags Input ── */
+    .tags-input-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding: 8px 12px;
+      background: var(--admin-surface-2);
+      border: 1px solid var(--admin-border);
+      border-radius: 8px;
+      min-height: 44px;
+      align-items: center;
+      cursor: text;
+    }
+
+    .tags-input-wrapper:focus-within {
+      border-color: var(--admin-accent);
+      box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+
+    .tag-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      background: rgba(99, 102, 241, 0.15);
+      color: var(--admin-accent);
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .tag-chip button {
+      background: none;
+      border: none;
+      color: var(--admin-accent);
+      cursor: pointer;
+      font-size: 14px;
+      padding: 0;
+      line-height: 1;
+    }
+
+    .tags-input-wrapper input {
+      border: none;
+      background: transparent;
+      color: var(--admin-text);
+      font-size: 14px;
+      outline: none;
+      flex: 1;
+      min-width: 100px;
+      padding: 4px 0;
+      font-family: inherit;
+    }
+
+    /* ── Checkbox ── */
+    .checkbox-group {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 0;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--admin-accent);
+      cursor: pointer;
+    }
+
+    .checkbox-group label {
+      font-size: 14px;
+      color: var(--admin-text);
+      cursor: pointer;
+      margin: 0;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 32px;
+      right: 32px;
+      padding: 14px 24px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 9999;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast.success {
+      background: var(--admin-success);
+      color: white;
+    }
+
+    .toast.error {
+      background: var(--admin-danger);
+      color: white;
+    }
+
+    /* ── Range Slider ── */
+    .range-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .range-group input[type="range"] {
+      flex: 1;
+      accent-color: var(--admin-accent);
+      height: 6px;
+    }
+
+    .range-group .range-value {
+      min-width: 40px;
+      text-align: center;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--admin-accent);
+    }
+
+    /* ── Live Preview Frame ── */
+    .preview-frame {
+      width: 100%;
+      height: 600px;
+      border: 1px solid var(--admin-border);
+      border-radius: var(--admin-radius);
+      background: white;
+    }
+
+    /* ── Mobile Toggle ── */
+    .mobile-toggle {
+      display: none;
+      position: fixed;
+      top: 16px;
+      left: 16px;
+      z-index: 200;
+      width: 40px;
+      height: 40px;
+      border-radius: 8px;
+      background: var(--admin-surface);
+      border: 1px solid var(--admin-border);
+      color: var(--admin-text);
+      font-size: 18px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+      }
+
+      .sidebar.open {
+        transform: translateX(0);
+      }
+
+      .main-content {
+        margin-left: 0;
+        padding: 24px 16px;
+        padding-top: 64px;
+      }
+
+      .mobile-toggle {
+        display: flex;
+      }
+
+      .form-row {
+        grid-template-columns: 1fr;
+      }
+
+      .form-row.three {
+        grid-template-columns: 1fr;
+      }
+
+      .admin-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+
+      .color-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* ── Message Cards ── */
+    .msg-card {
+      background: var(--admin-surface-2);
+      border: 1px solid var(--admin-border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      transition: border-color .2s;
+      position: relative;
+    }
+    .msg-card.unread {
+      border-left: 3px solid var(--admin-accent);
+    }
+    .msg-card .msg-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    .msg-card .msg-sender {
+      font-weight: 600;
+      color: #fff;
+      font-size: 15px;
+    }
+    .msg-card .msg-email {
+      font-size: 13px;
+      color: var(--admin-text-dim);
+    }
+    .msg-card .msg-subject {
+      font-weight: 500;
+      color: var(--admin-accent);
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .msg-card .msg-body {
+      font-size: 14px;
+      color: var(--admin-text-dim);
+      line-height: 1.6;
+      white-space: pre-wrap;
+    }
+    .msg-card .msg-time {
+      font-size: 12px;
+      color: var(--admin-text-dim);
+      margin-top: 10px;
+      opacity: .7;
+    }
+    .msg-card .msg-actions {
+      display: flex;
+      gap: 6px;
+    }
+    .msg-card .msg-actions button {
+      background: var(--admin-bg);
+      border: 1px solid var(--admin-border);
+      color: var(--admin-text-dim);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .msg-card .msg-actions button:hover {
+      color: #fff;
+      border-color: var(--admin-accent);
+    }
+    .msg-badge {
+      background: #ef4444;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 50%;
+      min-width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: 6px;
+    }
+    .msg-badge.hidden { display: none; }
+  </style>
+</head>
+<body>
+
+  <!-- Mobile Toggle -->
+  <button class="mobile-toggle" id="mobileToggle">
+    <i class="fas fa-bars"></i>
+  </button>
+
+  <div class="admin-layout">
+
+    <!-- ═══ Sidebar ═══ -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-brand">
+        <h1><i class="fas fa-sliders-h"></i> Admin Panel</h1>
+        <p>Personalize your portfolio</p>
+      </div>
+      <ul class="sidebar-nav" id="sidebarNav">
+        <li><a href="#" data-tab="personal" class="active"><i class="fas fa-user"></i> Personal Info</a></li>
+        <li><a href="#" data-tab="about"><i class="fas fa-info-circle"></i> About & Bio</a></li>
+        <li><a href="#" data-tab="experience"><i class="fas fa-briefcase"></i> Experience</a></li>
+        <li><a href="#" data-tab="services"><i class="fas fa-concierge-bell"></i> Services</a></li>
+        <li><a href="#" data-tab="orah"><i class="fas fa-building"></i> Orah (Business)</a></li>
+        <li><a href="#" data-tab="projects"><i class="fas fa-folder-open"></i> Projects</a></li>
+        <li><a href="#" data-tab="skills"><i class="fas fa-chart-bar"></i> Skills</a></li>
+        <li><a href="#" data-tab="contact"><i class="fas fa-envelope"></i> Contact</a></li>
+        <li><a href="#" data-tab="theme"><i class="fas fa-palette"></i> Theme & Colors</a></li>
+        <div class="sidebar-divider"></div>
+        <li><a href="#" data-tab="messages"><i class="fas fa-inbox"></i> Messages <span class="msg-badge" id="msgBadge" style="display:none;background:var(--admin-danger);color:white;font-size:11px;font-weight:700;padding:2px 7px;border-radius:10px;margin-left:auto;"></span></a></li>
+        <li><a href="#" data-tab="emailsetup"><i class="fas fa-cog"></i> Email Setup</a></li>
+        <div class="sidebar-divider"></div>
+        <li><a href="#" data-tab="preview"><i class="fas fa-eye"></i> Live Preview</a></li>
+      </ul>
+    </aside>
+
+    <!-- ═══ Main Content ═══ -->
+    <main class="main-content">
+      <div class="admin-header">
+        <h2 id="panelTitle">Personal Info</h2>
+        <div class="header-actions">
+          <button class="btn-admin btn-preview" onclick="openPreview()">
+            <i class="fas fa-external-link-alt"></i> Open Site
+          </button>
+          <button class="btn-admin btn-save" onclick="saveConfig()">
+            <i class="fas fa-save"></i> Save Changes
+          </button>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+           TAB: PERSONAL INFO
+           ═══════════════════════════════════ -->
+      <div class="tab-panel active" id="tab-personal">
+        <div class="admin-card">
+          <h3><i class="fas fa-id-card"></i> Identity</h3>
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" id="p-firstName" />
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" id="p-lastName" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Logo First Letter</label>
+              <input type="text" id="p-logoFirstLetter" maxlength="2" />
+              <p class="form-hint">The highlighted letter in the navbar logo</p>
+            </div>
+            <div class="form-group">
+              <label>Logo Rest</label>
+              <input type="text" id="p-logoRest" maxlength="10" />
+              <p class="form-hint">Letters after the accent letter (e.g. "K")</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Tagline</label>
+            <input type="text" id="p-tagline" />
+            <p class="form-hint">e.g. "Developer & Videographer"</p>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3><i class="fas fa-heading"></i> Hero Section</h3>
+          <div class="form-group">
+            <label>Headline Lines (one per line)</label>
+            <textarea id="p-heroHeadline" rows="3"></textarea>
+            <p class="form-hint">Each line becomes a separate line in the hero. e.g. line 1: "Crafting Digital" / line 2: "Solutions & Visual"</p>
+          </div>
+          <div class="form-group">
+            <label>Accent Word</label>
+            <input type="text" id="p-heroAccentWord" />
+            <p class="form-hint">The gradient-highlighted word at the end (e.g. "Stories.")</p>
+          </div>
+          <div class="form-group">
+            <label>Hero Description</label>
+            <textarea id="p-heroDescription" rows="3"></textarea>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3><i class="fas fa-camera"></i> Profile Photo</h3>
+          <div class="image-upload" id="profileImageUpload" onclick="document.getElementById('profileImageInput').click()">
+            <input type="file" id="profileImageInput" accept="image/*" />
+            <div class="upload-text" id="profileUploadText">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <p>Click to upload your profile photo</p>
+              <span>JPG, PNG, WebP — Recommended: 600×800px</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3><i class="fas fa-file-pdf"></i> CV / Resume</h3>
+          <div class="image-upload" id="cvUpload" onclick="document.getElementById('cvInput').click()" style="padding:24px;">
+            <input type="file" id="cvInput" accept=".pdf,.doc,.docx" />
+            <div class="upload-text" id="cvUploadText">
+              <i class="fas fa-file-upload"></i>
+              <p>Click to upload your CV</p>
+              <span>PDF, DOC — will show a "Download CV" button on the site</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3><i class="fas fa-share-alt"></i> Social Links</h3>
+          <div id="socialsRepeater"></div>
+          <button class="btn-admin btn-add" onclick="addSocial()">
+            <i class="fas fa-plus"></i> Add Social Link
+          </button>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+           TAB: ABOUT
+           ═══════════════════════════════════ -->
+      <div class="tab-panel" id="tab-about">
+        <div class="admin-card">
+          <h3><i class="fas fa-quote-left"></i> About Text</h3>
+          <div class="form-group">
+            <label>Lead Paragraph (supports &lt;strong&gt; tags)</label>
+            <textarea id="a-leadText" rows="3"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Additional Paragraphs (one per block)</label>
+            <div id="aboutParagraphs"></div>
+            <button class="btn-admin btn-add" onclick="addAboutParagraph()" style="margin-top:8px;">
+              <i class="fas fa-plus"></i> Add Paragraph
+            </button>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3><i class="fas fa-hashtag"></i> Stats</h3>
+          <div id="statsRepeater"></div>
+          <button class="btn-admin btn-add" onclick="addStat()">
+            <i class="fas fa-plus"></i> Add Stat
+          </button>
+        </div>
+
+        <div class="admin-card">
+          <h3><i class="fas fa-graduation-cap"></i> Education</h3>
+          <div class="form-group">
+            <label>Degree</label>
+            <input type="text" id="edu-degree" />
+          </div>
+          <div class="form-group">
+            <label>Institution</label>
+            <input type="text" id="edu-institution" />
+          </div>
+          <div class="form-group">
+            <label>Graduation Date</label>
+            <input type="text" id="edu-graduationDate" />
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3><i class="fas fa-newspaper"></i> Footer</h3>
+          <div class="form-group">
+            <label>Footer Description</label>
+            <input type="text" id="f-description" />
+          </div>
+          <div class="form-group">
+            <label>Copyright Text</label>
+            <input type="text" id="f-copyright" />
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+           TAB: EXPERIENCE
+           ═══════════════════════════════════ -->
+      <div class="tab-panel" id="tab-experience">
+        <div class="admin-card">
+          <h3><i class="fas fa-briefcase"></i> Experience Timeline</h3>
+          <p class="form-hint" style="margin-bottom:16px;">Add your work history. They appear in the order listed.</p>
+          <div id="experienceRepeater"></div>
+          <button class="btn-admin btn-add" onclick="addExperience()">
+            <i class="fas fa-plus"></i> Add Experience
+          </button>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+           TAB: SERVICES
+           ═══════════════════════════════════ -->
+      <div class="tab-panel" id="tab-services">
+        <div class="admin-card">
+          <h3><i class="fas fa-concierge-bell"></i> Services</h3>
+          <p class="form-hint" style="margin-bottom:16px;">Check "Featured" on ONE service to give it the highlight style.</p>
+          <div id="servicesRepeater"></div>
+          <button class="btn-admin btn-add" onclick="addService()">
+            <i class="fas fa-plus"></i> Add Service
+          </button>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+           TAB: ORAH (BUSINESS)
+           ═══════════════════════════════════ -->
+      <div class="tab-panel" id="tab-orah">
+        <div class="admin-card">
+          <h3><i class="fas fa-building"></i> Business Overview</h3>
+          <div class="form-row" style="margin-bottom:20px;">
+            <div class="form-group">
+              <label style="display:flex;align-items:center;gap:8px;">
+                <input type="checkbox" id="orahEnabled" style="width:18px;height:18px;accent-color:var(--admin-accent);" />
+                <span>Show Orah section on portfolio</span>
+              </label>
+            </div>
+          </div>
+          <div class="form-row two">
+            <div class="form-group">
+              <label>Business Name</label>
+              <input type="text" id="orahName" placeholder="Orah" />
+            </div>
+            <div class="form-group">
+              <label>Tagline</label>
+              <input type="text" id="orahTagline" placeholder="Creative & Digital Solutions Agency" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="orahDesc" rows="3" placeholder="What is your business about?"></textarea>
+          </div>
+          <div class="form-group">
+            <label>Vision Statement</label>
+            <textarea id="orahVisionText" rows="3" placeholder="Where do you see your business going?"></textarea>
+          </div>
+          <div class="form-row two">
+            <div class="form-group">
+              <label>Logo Image URL <span class="form-hint">(leave blank for text logo)</span></label>
+              <input type="text" id="orahLogoUrl" placeholder="assets/orah-logo.png" />
+            </div>
+            <div class="form-group">
+              <label>Website URL <span class="form-hint">(leave blank to hide)</span></label>
+              <input type="text" id="orahWebsiteUrl" placeholder="https://orah.co.ke" />
+            </div>
+          </div>
+          <div class="form-row two">
+            <div class="form-group">
+              <label>CTA Button Text</label>
+              <input type="text" id="orahCtaText" placeholder="Work with Orah" />
+            </div>
+            <div class="form-group">
+              <label>CTA Button Link</label>
+              <input type="text" id="orahCtaUrl" placeholder="#contact" />
+            </div>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3><i class="fas fa-th-large"></i> Offerings / Services</h3>
+          <p class="form-hint" style="margin-bottom:16px;">What does Orah offer? Add cards that will show in the Orah section.</p>
+          <div id="orahOfferingsRepeater"></div>
+          <button class="btn-admin btn-add" onclick="addOrahOffering()">
+            <i class="fas fa-plus"></i> Add Offering
+          </button>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+           TAB: PROJECTS
+           ═══════════════════════════════════ -->
+      <div class="tab-panel" id="tab-projects">
+        <div class="admin-card">
+          <h3><i class="fas fa-filter"></i> Portfolio Filter Categories</h3>
+          <p class="form-hint" style="margin-bottom:16px;">"All" is always first. Add categories to organize your projects.</p>
+          <div id="filtersRepeater"></div>
+          <button class="btn-admin btn-add" onclick="addFilter()">
+            <i class="fas fa-plus"></i> Add Category
+          </button>
+        </div>
+
+        <div class="admin-card">
+          <h3><i class="fas fa-folder-open"></i> Projects</h3>
+          <div id="projectsRepeater"></div>
+          <button class="btn-admin btn-add" onclick="addProject()">
+            <i class="fas fa-plus"></i> Add Project
+          </button>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+           TAB: SKILLS
+           ═══════════════════════════════════ -->
+      <div class="tab-panel" id="tab-skills">
+        <div class="admin-card">
+          <h3><i class="fas fa-chart-bar"></i> Skill Categories</h3>
+          <p class="form-hint" style="margin-bottom:16px;">Use "bar" type for progress bars, "tags" for soft-skill chips.</p>
+          <div id="skillsRepeater"></div>
+          <button class="btn-admin btn-add" onclick="addSkillCategory()">
+            <i class="fas fa-plus"></i> Add Skill Category
+          </button>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+           TAB: CONTACT
+           ═══════════════════════════════════ -->
+      <div class="tab-panel" id="tab-contact">
+        <div class="admin-card">
+          <h3><i class="fas fa-envelope-open-text"></i> Contact Section</h3>
+          <div class="form-group">
+            <label>Heading Text</label>
+            <textarea id="c-heading" rows="2"></textarea>
+          </div>
+        </div>
+
+        <div class="admin-card">
+          <h3><i class="fas fa-address-book"></i> Contact Methods</h3>
+          <div id="contactMethodsRepeater"></div>
+          <button class="btn-admin btn-add" onclick="addContactMethod()">
+            <i class="fas fa-plus"></i> Add Contact Method
+          </button>
+        </div>
+
+        <div class="admin-card">
+          <h3><i class="fas fa-list"></i> Form Service Options</h3>
+          <p class="form-hint" style="margin-bottom:12px;">Dropdown options visitors see in the contact form.</p>
+          <div id="formServicesRepeater"></div>
+          <button class="btn-admin btn-add" onclick="addFormService()">
+            <i class="fas fa-plus"></i> Add Service Option
+          </button>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+           TAB: THEME
+           ═══════════════════════════════════ -->
+      <div class="tab-panel" id="tab-theme">
+        <div class="admin-card">
+          <h3><i class="fas fa-palette"></i> Color Scheme</h3>
+          <p class="form-hint" style="margin-bottom:20px;">Click any color swatch to change it. The entire site updates based on these colors.</p>
+          <div class="color-grid" id="colorGrid"></div>
+        </div>
+
+        <div class="admin-card">
+          <h3><i class="fas fa-circle"></i> Hero Badge Colors</h3>
+          <p class="form-hint" style="margin-bottom:16px;">The floating icon badges around your profile photo.</p>
+          <div id="badgeColorsRepeater"></div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+           TAB: MESSAGES
+           ═══════════════════════════════════ -->
+      <div class="tab-panel" id="tab-messages">
+        <div class="admin-card">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+            <h3 style="margin:0;"><i class="fas fa-inbox"></i> Inbox</h3>
+            <div style="display:flex;gap:8px;">
+              <button class="btn-admin btn-preview btn-sm" onclick="markAllRead()"><i class="fas fa-check-double"></i> Mark All Read</button>
+              <button class="btn-admin btn-danger btn-sm" onclick="clearAllMessages()"><i class="fas fa-trash"></i> Clear All</button>
+            </div>
+          </div>
+          <div id="messagesContainer">
+            <p style="color:var(--admin-text-dim);text-align:center;padding:40px 0;">No messages yet. Messages from your contact form will appear here.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+           TAB: EMAIL SETUP
+           ═══════════════════════════════════ -->
+      <div class="tab-panel" id="tab-emailsetup">
+        <div class="admin-card">
+          <h3><i class="fas fa-envelope-open-text"></i> Email Delivery Setup (Optional)</h3>
+          <p style="color:var(--admin-text-dim);font-size:14px;margin-bottom:20px;line-height:1.7;">
+            Messages are <strong style="color:var(--admin-success);">always saved</strong> in the Messages tab above.<br />
+            To <strong>also receive them by email</strong>, set up free EmailJS below:
+          </p>
+          <div class="admin-card" style="background:var(--admin-surface-2);border:1px solid var(--admin-border);">
+            <h3 style="font-size:14px;"><i class="fas fa-list-ol"></i> Quick Setup Guide</h3>
+            <ol style="color:var(--admin-text-dim);font-size:13px;line-height:2;padding-left:20px;">
+              <li>Go to <a href="https://www.emailjs.com/" target="_blank" style="color:var(--admin-accent);">emailjs.com</a> and create a free account</li>
+              <li>Add an <strong>Email Service</strong> (Gmail, Outlook, etc.) → copy the <strong>Service ID</strong></li>
+              <li>Create an <strong>Email Template</strong> using these variables: <code style="background:var(--admin-bg);padding:2px 6px;border-radius:4px;font-size:12px;">{{from_name}}</code> <code style="background:var(--admin-bg);padding:2px 6px;border-radius:4px;font-size:12px;">{{from_email}}</code> <code style="background:var(--admin-bg);padding:2px 6px;border-radius:4px;font-size:12px;">{{subject}}</code> <code style="background:var(--admin-bg);padding:2px 6px;border-radius:4px;font-size:12px;">{{message}}</code></li>
+              <li>Copy the <strong>Template ID</strong> and your <strong>Public Key</strong> (Account → API Keys)</li>
+              <li>Paste them below and click <strong>Save Email Settings</strong></li>
+            </ol>
+          </div>
+          <div style="margin-top:20px;">
+            <div class="form-row three">
+              <div class="form-group">
+                <label>Service ID</label>
+                <input type="text" id="ejs-serviceId" placeholder="e.g. service_abc123" />
+              </div>
+              <div class="form-group">
+                <label>Template ID</label>
+                <input type="text" id="ejs-templateId" placeholder="e.g. template_xyz789" />
+              </div>
+              <div class="form-group">
+                <label>Public Key</label>
+                <input type="text" id="ejs-publicKey" placeholder="e.g. user_ABCdef123" />
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:center;">
+              <button class="btn-admin btn-save" onclick="saveEmailSettings()">
+                <i class="fas fa-save"></i> Save Email Settings
+              </button>
+              <button class="btn-admin btn-preview" onclick="testEmail()">
+                <i class="fas fa-paper-plane"></i> Send Test Email
+              </button>
+              <span id="emailStatus" style="font-size:13px;color:var(--admin-text-dim);"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ═══════════════════════════════════
+           TAB: PREVIEW
+           ═══════════════════════════════════ -->
+      <div class="tab-panel" id="tab-preview">
+        <div class="admin-card" style="padding:0; overflow:hidden;">
+          <iframe class="preview-frame" id="previewFrame" src="index.html"></iframe>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Load config first -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="config.js"></script>
+
+  <script>
+    /* ==========================================
+       ADMIN PANEL LOGIC
+       ========================================== */
+
+    // Working copy of config
+    let cfg = JSON.parse(JSON.stringify(CONFIG));
+    // Track uploaded files as data URLs
+    let uploadedFiles = { profileImage: "", cvFile: "" };
+
+    // ── Init ──
+    document.addEventListener("DOMContentLoaded", () => {
+      loadAllFields();
+      initTabs();
+      initMobileToggle();
+      initFileUploads();
+      renderMessages();
+      loadEmailSettings();
+    });
+
+    // ══════════════════════════════════════════
+    //  TABS
+    // ══════════════════════════════════════════
+    function initTabs() {
+      document.querySelectorAll("[data-tab]").forEach((link) => {
+        link.addEventListener("click", (e) => {
+          e.preventDefault();
+          const tab = link.getAttribute("data-tab");
+
+          // Update sidebar
+          document.querySelectorAll("[data-tab]").forEach((l) => l.classList.remove("active"));
+          link.classList.add("active");
+
+          // Update panels
+          document.querySelectorAll(".tab-panel").forEach((p) => p.classList.remove("active"));
+          document.getElementById(`tab-${tab}`).classList.add("active");
+
+          // Update title
+          const titleMap = { messages: "Messages", emailsetup: "Email Setup" };
+          document.getElementById("panelTitle").textContent = titleMap[tab] || link.textContent.trim();
+
+          // Refresh preview
+          if (tab === "preview") refreshPreview();
+          // Refresh messages
+          if (tab === "messages") renderMessages();
+
+          // Close sidebar on mobile
+          document.getElementById("sidebar").classList.remove("open");
+        });
+      });
+    }
+
+    function initMobileToggle() {
+      document.getElementById("mobileToggle").addEventListener("click", () => {
+        document.getElementById("sidebar").classList.toggle("open");
+      });
+    }
+
+    // ══════════════════════════════════════════
+    //  LOAD CONFIG → FORM FIELDS
+    // ══════════════════════════════════════════
+    function loadAllFields() {
+      // Personal
+      setVal("p-firstName", cfg.personal.firstName);
+      setVal("p-lastName", cfg.personal.lastName);
+      setVal("p-logoFirstLetter", cfg.personal.logoFirstLetter);
+      setVal("p-logoRest", cfg.personal.logoRest);
+      setVal("p-tagline", cfg.personal.tagline);
+      setVal("p-heroHeadline", cfg.personal.heroHeadline.join("\n"));
+      setVal("p-heroAccentWord", cfg.personal.heroAccentWord);
+      setVal("p-heroDescription", cfg.personal.heroDescription);
+
+      // Show existing profile image
+      if (cfg.personal.profileImage) {
+        showUploadedImage("profileImageUpload", "profileUploadText", cfg.personal.profileImage);
+      }
+
+      // Socials
+      renderSocialsRepeater();
+
+      // About
+      setVal("a-leadText", cfg.about.leadText);
+      renderAboutParagraphs();
+      renderStatsRepeater();
+
+      // Education
+      setVal("edu-degree", cfg.education.degree);
+      setVal("edu-institution", cfg.education.institution);
+      setVal("edu-graduationDate", cfg.education.graduationDate);
+
+      // Footer
+      setVal("f-description", cfg.footer.description);
+      setVal("f-copyright", cfg.footer.copyright);
+
+      // Experience
+      renderExperienceRepeater();
+
+      // Services
+      renderServicesRepeater();
+
+      // Filters & Projects
+      renderFiltersRepeater();
+      renderProjectsRepeater();
+
+      // Skills
+      renderSkillsRepeater();
+
+      // Orah
+      if (!cfg.orah) {
+        cfg.orah = { enabled: true, name: "Orah", tagline: "", description: "", vision: "", logo: "", website: "", offerings: [], cta: { text: "Work with Orah", url: "#contact" } };
+      }
+      document.getElementById("orahEnabled").checked = cfg.orah.enabled !== false;
+      setVal("orahName", cfg.orah.name);
+      setVal("orahTagline", cfg.orah.tagline);
+      setVal("orahDesc", cfg.orah.description);
+      setVal("orahVisionText", cfg.orah.vision);
+      setVal("orahLogoUrl", cfg.orah.logo);
+      setVal("orahWebsiteUrl", cfg.orah.website);
+      setVal("orahCtaText", cfg.orah.cta ? cfg.orah.cta.text : "");
+      setVal("orahCtaUrl", cfg.orah.cta ? cfg.orah.cta.url : "");
+      renderOrahOfferingsRepeater();
+
+      // Contact
+      setVal("c-heading", cfg.contact.heading);
+      renderContactMethodsRepeater();
+      renderFormServicesRepeater();
+
+      // Theme
+      renderColorGrid();
+      renderBadgeColors();
+    }
+
+    function setVal(id, val) {
+      const el = document.getElementById(id);
+      if (el) el.value = val || "";
+    }
+
+    function getVal(id) {
+      const el = document.getElementById(id);
+      return el ? el.value : "";
+    }
+
+    // ══════════════════════════════════════════
+    //  FILE UPLOADS
+    // ══════════════════════════════════════════
+    function initFileUploads() {
+      // Profile Image
+      document.getElementById("profileImageInput").addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          uploadedFiles.profileImage = ev.target.result;
+          showUploadedImage("profileImageUpload", "profileUploadText", ev.target.result);
+        };
+        reader.readAsDataURL(file);
+      });
+
+      // CV
+      document.getElementById("cvInput").addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          uploadedFiles.cvFile = ev.target.result;
+          const textEl = document.getElementById("cvUploadText");
+          textEl.innerHTML = `<i class="fas fa-check-circle" style="color:var(--admin-success)"></i><p>${file.name}</p><span>CV uploaded successfully</span>`;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function showUploadedImage(wrapperId, textId, src) {
+      const wrapper = document.getElementById(wrapperId);
+      const text = document.getElementById(textId);
+      if (text) text.style.display = "none";
+      wrapper.classList.add("has-image");
+
+      // Remove old image if exists
+      const oldImg = wrapper.querySelector("img");
+      if (oldImg) oldImg.remove();
+      const oldBtn = wrapper.querySelector(".image-remove");
+      if (oldBtn) oldBtn.remove();
+
+      const img = document.createElement("img");
+      img.src = src;
+      wrapper.appendChild(img);
+
+      const removeBtn = document.createElement("button");
+      removeBtn.className = "image-remove";
+      removeBtn.innerHTML = '<i class="fas fa-times"></i>';
+      removeBtn.onclick = (e) => {
+        e.stopPropagation();
+        img.remove();
+        removeBtn.remove();
+        wrapper.classList.remove("has-image");
+        if (text) { text.style.display = ""; }
+        uploadedFiles.profileImage = "";
+      };
+      wrapper.appendChild(removeBtn);
+    }
+
+    // ══════════════════════════════════════════
+    //  REPEATER: SOCIALS
+    // ══════════════════════════════════════════
+    function renderSocialsRepeater() {
+      const container = document.getElementById("socialsRepeater");
+      container.innerHTML = cfg.socials.map((s, i) => `
+        <div class="repeater-item">
+          <div class="repeater-header">
+            <h4>${s.platform || "Social Link"}</h4>
+            <div class="repeater-actions">
+              <button class="btn-admin btn-danger btn-sm" onclick="removeSocial(${i})"><i class="fas fa-trash"></i></button>
+            </div>
+          </div>
+          <div class="form-row three">
+            <div class="form-group">
+              <label>Platform</label>
+              <input type="text" value="${s.platform}" onchange="cfg.socials[${i}].platform=this.value" />
+            </div>
+            <div class="form-group">
+              <label>URL</label>
+              <input type="text" value="${s.url}" onchange="cfg.socials[${i}].url=this.value" />
+            </div>
+            <div class="form-group">
+              <label>Icon Class</label>
+              <input type="text" value="${s.icon}" onchange="cfg.socials[${i}].icon=this.value" />
+              <p class="form-hint">e.g. fab fa-github</p>
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function addSocial() {
+      cfg.socials.push({ platform: "", url: "#", icon: "fas fa-link" });
+      renderSocialsRepeater();
+    }
+
+    function removeSocial(i) {
+      cfg.socials.splice(i, 1);
+      renderSocialsRepeater();
+    }
+
+    // ══════════════════════════════════════════
+    //  REPEATER: ABOUT PARAGRAPHS
+    // ══════════════════════════════════════════
+    function renderAboutParagraphs() {
+      const container = document.getElementById("aboutParagraphs");
+      container.innerHTML = cfg.about.paragraphs.map((p, i) => `
+        <div class="repeater-item" style="margin-bottom:8px;">
+          <div style="display:flex;gap:8px;align-items:start;">
+            <textarea rows="2" style="flex:1;padding:10px 14px;background:var(--admin-bg);border:1px solid var(--admin-border);border-radius:8px;color:var(--admin-text);font-size:14px;font-family:inherit;resize:vertical;outline:none;" onchange="cfg.about.paragraphs[${i}]=this.value">${p}</textarea>
+            <button class="btn-admin btn-danger btn-sm" onclick="cfg.about.paragraphs.splice(${i},1);renderAboutParagraphs()" style="margin-top:4px;"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function addAboutParagraph() {
+      cfg.about.paragraphs.push("");
+      renderAboutParagraphs();
+    }
+
+    // ══════════════════════════════════════════
+    //  REPEATER: STATS
+    // ══════════════════════════════════════════
+    function renderStatsRepeater() {
+      const container = document.getElementById("statsRepeater");
+      container.innerHTML = cfg.about.stats.map((s, i) => `
+        <div class="repeater-item">
+          <div class="repeater-header">
+            <h4>${s.label || "Stat"}</h4>
+            <button class="btn-admin btn-danger btn-sm" onclick="cfg.about.stats.splice(${i},1);renderStatsRepeater()"><i class="fas fa-trash"></i></button>
+          </div>
+          <div class="form-row three">
+            <div class="form-group">
+              <label>Number</label>
+              <input type="number" value="${s.number}" onchange="cfg.about.stats[${i}].number=parseInt(this.value)" />
+            </div>
+            <div class="form-group">
+              <label>Suffix</label>
+              <input type="text" value="${s.suffix}" onchange="cfg.about.stats[${i}].suffix=this.value" />
+            </div>
+            <div class="form-group">
+              <label>Label</label>
+              <input type="text" value="${s.label}" onchange="cfg.about.stats[${i}].label=this.value" />
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function addStat() {
+      cfg.about.stats.push({ number: 0, suffix: "+", label: "" });
+      renderStatsRepeater();
+    }
+
+    // ══════════════════════════════════════════
+    //  REPEATER: EXPERIENCE
+    // ══════════════════════════════════════════
+    function renderExperienceRepeater() {
+      const container = document.getElementById("experienceRepeater");
+      container.innerHTML = cfg.experience.map((exp, i) => `
+        <div class="repeater-item">
+          <div class="repeater-header">
+            <h4>${exp.role || "Position"} — ${exp.company || ""}</h4>
+            <div class="repeater-actions">
+              ${i > 0 ? `<button class="btn-admin btn-sm btn-preview" onclick="moveExp(${i},-1)"><i class="fas fa-arrow-up"></i></button>` : ""}
+              ${i < cfg.experience.length - 1 ? `<button class="btn-admin btn-sm btn-preview" onclick="moveExp(${i},1)"><i class="fas fa-arrow-down"></i></button>` : ""}
+              <button class="btn-admin btn-danger btn-sm" onclick="cfg.experience.splice(${i},1);renderExperienceRepeater()"><i class="fas fa-trash"></i></button>
+            </div>
+          </div>
+          <div class="form-row three">
+            <div class="form-group">
+              <label>Date Range</label>
+              <input type="text" value="${exp.date}" onchange="cfg.experience[${i}].date=this.value" />
+            </div>
+            <div class="form-group">
+              <label>Role / Title</label>
+              <input type="text" value="${exp.role}" onchange="cfg.experience[${i}].role=this.value" />
+            </div>
+            <div class="form-group">
+              <label>Company</label>
+              <input type="text" value="${exp.company}" onchange="cfg.experience[${i}].company=this.value" />
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function addExperience() {
+      cfg.experience.push({ date: "", role: "", company: "" });
+      renderExperienceRepeater();
+    }
+
+    function moveExp(i, dir) {
+      const arr = cfg.experience;
+      [arr[i], arr[i + dir]] = [arr[i + dir], arr[i]];
+      renderExperienceRepeater();
+    }
+
+    // ══════════════════════════════════════════
+    //  REPEATER: SERVICES
+    // ══════════════════════════════════════════
+    function renderServicesRepeater() {
+      const container = document.getElementById("servicesRepeater");
+      container.innerHTML = cfg.services.map((svc, i) => `
+        <div class="repeater-item">
+          <div class="repeater-header">
+            <h4><i class="${svc.icon}" style="margin-right:8px;color:var(--admin-accent)"></i> ${svc.title || "Service"}</h4>
+            <button class="btn-admin btn-danger btn-sm" onclick="cfg.services.splice(${i},1);renderServicesRepeater()"><i class="fas fa-trash"></i></button>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text" value="${svc.title}" onchange="cfg.services[${i}].title=this.value" />
+            </div>
+            <div class="form-group">
+              <label>Icon Class</label>
+              <input type="text" value="${svc.icon}" onchange="cfg.services[${i}].icon=this.value" />
+              <p class="form-hint">e.g. fas fa-code</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea rows="2" onchange="cfg.services[${i}].description=this.value">${svc.description}</textarea>
+          </div>
+          <div class="form-group">
+            <label>Features (comma-separated)</label>
+            <input type="text" value="${svc.features.join(", ")}" onchange="cfg.services[${i}].features=this.value.split(',').map(s=>s.trim()).filter(Boolean)" />
+          </div>
+          <div class="checkbox-group">
+            <input type="checkbox" id="svc-featured-${i}" ${svc.featured ? "checked" : ""} onchange="cfg.services[${i}].featured=this.checked" />
+            <label for="svc-featured-${i}">Featured (gradient highlight)</label>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function addService() {
+      cfg.services.push({ icon: "fas fa-star", title: "", description: "", features: [], featured: false });
+      renderServicesRepeater();
+    }
+
+    // ══════════════════════════════════════════
+    //  REPEATER: ORAH OFFERINGS
+    // ══════════════════════════════════════════
+    function renderOrahOfferingsRepeater() {
+      const container = document.getElementById("orahOfferingsRepeater");
+      const offerings = cfg.orah.offerings || [];
+      container.innerHTML = offerings.map((o, i) => `
+        <div class="repeater-item">
+          <div class="repeater-header">
+            <h4><i class="${o.icon}" style="margin-right:8px;color:var(--admin-accent)"></i> ${o.title || "Offering"}</h4>
+            <button class="btn-admin btn-danger btn-sm" onclick="cfg.orah.offerings.splice(${i},1);renderOrahOfferingsRepeater()"><i class="fas fa-trash"></i></button>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text" class="orah-off-title" value="${o.title}" onchange="cfg.orah.offerings[${i}].title=this.value" />
+            </div>
+            <div class="form-group">
+              <label>Icon Class</label>
+              <input type="text" class="orah-off-icon" value="${o.icon}" onchange="cfg.orah.offerings[${i}].icon=this.value" />
+              <p class="form-hint">e.g. fas fa-globe</p>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea class="orah-off-desc" rows="2" onchange="cfg.orah.offerings[${i}].description=this.value">${o.description}</textarea>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function addOrahOffering() {
+      if (!cfg.orah.offerings) cfg.orah.offerings = [];
+      cfg.orah.offerings.push({ icon: "fas fa-star", title: "", description: "" });
+      renderOrahOfferingsRepeater();
+    }
+
+    // ══════════════════════════════════════════
+    //  REPEATER: FILTERS
+    // ══════════════════════════════════════════
+    function renderFiltersRepeater() {
+      const container = document.getElementById("filtersRepeater");
+      container.innerHTML = cfg.portfolioFilters.map((f, i) => `
+        <div class="repeater-item" style="padding:12px 16px;">
+          <div style="display:flex;gap:12px;align-items:center;">
+            <div class="form-group" style="flex:1;margin:0;">
+              <input type="text" value="${f.key}" onchange="cfg.portfolioFilters[${i}].key=this.value" placeholder="Key (e.g. dev)" ${i === 0 ? "disabled" : ""} />
+            </div>
+            <div class="form-group" style="flex:1;margin:0;">
+              <input type="text" value="${f.label}" onchange="cfg.portfolioFilters[${i}].label=this.value" placeholder="Label (e.g. Development)" ${i === 0 ? "disabled" : ""} />
+            </div>
+            ${i > 0 ? `<button class="btn-admin btn-danger btn-sm" onclick="cfg.portfolioFilters.splice(${i},1);renderFiltersRepeater()"><i class="fas fa-trash"></i></button>` : ""}
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function addFilter() {
+      cfg.portfolioFilters.push({ key: "", label: "" });
+      renderFiltersRepeater();
+    }
+
+    // ══════════════════════════════════════════
+    //  REPEATER: PROJECTS
+    // ══════════════════════════════════════════
+    function renderProjectsRepeater() {
+      const container = document.getElementById("projectsRepeater");
+      container.innerHTML = cfg.projects.map((proj, i) => `
+        <div class="repeater-item">
+          <div class="repeater-header">
+            <h4>${proj.title || "Project"}</h4>
+            <button class="btn-admin btn-danger btn-sm" onclick="cfg.projects.splice(${i},1);renderProjectsRepeater()"><i class="fas fa-trash"></i></button>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text" value="${proj.title}" onchange="cfg.projects[${i}].title=this.value" />
+            </div>
+            <div class="form-group">
+              <label>Category Key</label>
+              <select onchange="cfg.projects[${i}].category=this.value">
+                ${cfg.portfolioFilters.filter(f => f.key !== "all").map(f => `<option value="${f.key}" ${proj.category === f.key ? "selected" : ""}>${f.label}</option>`).join("")}
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea rows="2" onchange="cfg.projects[${i}].description=this.value">${proj.description}</textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Placeholder Icon (when no image)</label>
+              <input type="text" value="${proj.icon}" onchange="cfg.projects[${i}].icon=this.value" />
+            </div>
+            <div class="form-group">
+              <label>Tags (comma-separated)</label>
+              <input type="text" value="${proj.tags.join(", ")}" onchange="cfg.projects[${i}].tags=this.value.split(',').map(s=>s.trim()).filter(Boolean)" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Project Image</label>
+            <div class="image-upload" style="padding:16px;" onclick="document.getElementById('projImg${i}').click()">
+              <input type="file" id="projImg${i}" accept="image/*" onchange="handleProjectImage(${i}, this)" style="display:none" />
+              ${proj.image
+                ? `<img src="${proj.image}" alt="" style="height:120px;border-radius:6px;" />`
+                : `<div class="upload-text"><i class="fas fa-image" style="font-size:20px;margin-bottom:8px;"></i><p style="font-size:13px;">Click to add screenshot</p></div>`
+              }
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Links (one per line: url | icon-class)</label>
+            <textarea rows="2" onchange="parseProjectLinks(${i}, this.value)">${proj.links.map(l => l.url + " | " + l.icon).join("\n")}</textarea>
+            <p class="form-hint">Format: https://example.com | fas fa-external-link-alt</p>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function handleProjectImage(i, input) {
+      const file = input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        cfg.projects[i].image = ev.target.result;
+        renderProjectsRepeater();
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function parseProjectLinks(i, val) {
+      cfg.projects[i].links = val.split("\n").filter(Boolean).map((line) => {
+        const parts = line.split("|").map((s) => s.trim());
+        return { url: parts[0] || "#", icon: parts[1] || "fas fa-link" };
+      });
+    }
+
+    function addProject() {
+      cfg.projects.push({
+        title: "",
+        description: "",
+        category: cfg.portfolioFilters.length > 1 ? cfg.portfolioFilters[1].key : "dev",
+        image: "",
+        icon: "fas fa-folder",
+        tags: [],
+        links: [{ url: "#", icon: "fas fa-external-link-alt" }],
+      });
+      renderProjectsRepeater();
+    }
+
+    // ══════════════════════════════════════════
+    //  REPEATER: SKILLS
+    // ══════════════════════════════════════════
+    function renderSkillsRepeater() {
+      const container = document.getElementById("skillsRepeater");
+      container.innerHTML = cfg.skillCategories.map((cat, i) => `
+        <div class="repeater-item">
+          <div class="repeater-header">
+            <h4><i class="${cat.icon}" style="margin-right:8px;color:var(--admin-accent)"></i> ${cat.title || "Category"}</h4>
+            <button class="btn-admin btn-danger btn-sm" onclick="cfg.skillCategories.splice(${i},1);renderSkillsRepeater()"><i class="fas fa-trash"></i></button>
+          </div>
+          <div class="form-row three">
+            <div class="form-group">
+              <label>Title</label>
+              <input type="text" value="${cat.title}" onchange="cfg.skillCategories[${i}].title=this.value" />
+            </div>
+            <div class="form-group">
+              <label>Icon Class</label>
+              <input type="text" value="${cat.icon}" onchange="cfg.skillCategories[${i}].icon=this.value" />
+            </div>
+            <div class="form-group">
+              <label>Type</label>
+              <select onchange="cfg.skillCategories[${i}].type=this.value;renderSkillsRepeater()">
+                <option value="bar" ${cat.type === "bar" ? "selected" : ""}>Progress Bars</option>
+                <option value="tags" ${cat.type === "tags" ? "selected" : ""}>Tags / Chips</option>
+              </select>
+            </div>
+          </div>
+          ${cat.type === "bar" ? renderBarSkills(cat, i) : renderTagSkills(cat, i)}
+        </div>
+      `).join("");
+    }
+
+    function renderBarSkills(cat, catIdx) {
+      return `
+        <div style="margin-top:12px;">
+          ${cat.skills.map((s, j) => `
+            <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px;">
+              <input type="text" value="${s.name}" style="flex:1;padding:8px 12px;background:var(--admin-bg);border:1px solid var(--admin-border);border-radius:6px;color:var(--admin-text);font-size:13px;outline:none;" onchange="cfg.skillCategories[${catIdx}].skills[${j}].name=this.value" />
+              <div class="range-group" style="flex:1;">
+                <input type="range" min="0" max="100" value="${s.level}" oninput="cfg.skillCategories[${catIdx}].skills[${j}].level=parseInt(this.value);this.nextElementSibling.textContent=this.value+'%'" />
+                <span class="range-value">${s.level}%</span>
+              </div>
+              <button class="btn-admin btn-danger btn-sm" onclick="cfg.skillCategories[${catIdx}].skills.splice(${j},1);renderSkillsRepeater()"><i class="fas fa-trash"></i></button>
+            </div>
+          `).join("")}
+          <button class="btn-admin btn-add btn-sm" style="margin-top:8px;" onclick="cfg.skillCategories[${catIdx}].skills.push({name:'',level:50});renderSkillsRepeater()">
+            <i class="fas fa-plus"></i> Add Skill
+          </button>
+        </div>`;
+    }
+
+    function renderTagSkills(cat, catIdx) {
+      return `
+        <div class="form-group" style="margin-top:12px;">
+          <label>Skills (comma-separated)</label>
+          <input type="text" value="${cat.skills.join(", ")}" onchange="cfg.skillCategories[${catIdx}].skills=this.value.split(',').map(s=>s.trim()).filter(Boolean)" />
+        </div>`;
+    }
+
+    function addSkillCategory() {
+      cfg.skillCategories.push({ title: "", icon: "fas fa-star", type: "bar", skills: [] });
+      renderSkillsRepeater();
+    }
+
+    // ══════════════════════════════════════════
+    //  REPEATER: CONTACT METHODS
+    // ══════════════════════════════════════════
+    function renderContactMethodsRepeater() {
+      const container = document.getElementById("contactMethodsRepeater");
+      container.innerHTML = cfg.contact.methods.map((m, i) => `
+        <div class="repeater-item">
+          <div class="repeater-header">
+            <h4>${m.label || "Method"}</h4>
+            <button class="btn-admin btn-danger btn-sm" onclick="cfg.contact.methods.splice(${i},1);renderContactMethodsRepeater()"><i class="fas fa-trash"></i></button>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Label</label>
+              <input type="text" value="${m.label}" onchange="cfg.contact.methods[${i}].label=this.value" />
+            </div>
+            <div class="form-group">
+              <label>Display Value</label>
+              <input type="text" value="${m.value}" onchange="cfg.contact.methods[${i}].value=this.value" />
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>URL</label>
+              <input type="text" value="${m.url}" onchange="cfg.contact.methods[${i}].url=this.value" />
+            </div>
+            <div class="form-group">
+              <label>Icon Class</label>
+              <input type="text" value="${m.icon}" onchange="cfg.contact.methods[${i}].icon=this.value" />
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function addContactMethod() {
+      cfg.contact.methods.push({ label: "", value: "", url: "#", icon: "fas fa-link" });
+      renderContactMethodsRepeater();
+    }
+
+    // ══════════════════════════════════════════
+    //  REPEATER: FORM SERVICES
+    // ══════════════════════════════════════════
+    function renderFormServicesRepeater() {
+      const container = document.getElementById("formServicesRepeater");
+      container.innerHTML = cfg.contact.formServices.map((s, i) => `
+        <div class="repeater-item" style="padding:10px 16px;margin-bottom:6px;">
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="text" value="${s}" style="flex:1;padding:8px 12px;background:var(--admin-bg);border:1px solid var(--admin-border);border-radius:6px;color:var(--admin-text);font-size:14px;outline:none;" onchange="cfg.contact.formServices[${i}]=this.value" />
+            <button class="btn-admin btn-danger btn-sm" onclick="cfg.contact.formServices.splice(${i},1);renderFormServicesRepeater()"><i class="fas fa-trash"></i></button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function addFormService() {
+      cfg.contact.formServices.push("");
+      renderFormServicesRepeater();
+    }
+
+    // ══════════════════════════════════════════
+    //  THEME / COLORS
+    // ══════════════════════════════════════════
+    const colorLabels = {
+      accentColor: "Accent Color",
+      accentLight: "Accent Light",
+      gradientStart: "Gradient Start",
+      gradientEnd: "Gradient End",
+      bgColor: "Background",
+      surfaceColor: "Surface / Cards",
+      textColor: "Text Primary",
+      textSecondary: "Text Secondary",
+      darkBg: "Dark Section BG",
+    };
+
+    function renderColorGrid() {
+      const grid = document.getElementById("colorGrid");
+      grid.innerHTML = Object.keys(colorLabels).map((key) => `
+        <div class="color-item">
+          <input type="color" value="${cfg.theme[key]}" onchange="cfg.theme['${key}']=this.value;this.nextElementSibling.querySelector('.color-hex').textContent=this.value" />
+          <div>
+            <div class="color-label">${colorLabels[key]}</div>
+            <div class="color-hex">${cfg.theme[key]}</div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function renderBadgeColors() {
+      const container = document.getElementById("badgeColorsRepeater");
+      const labels = ["Dev Badge (Code)", "Video Badge", "Design Badge"];
+      container.innerHTML = cfg.theme.badgeColors.map((b, i) => `
+        <div class="repeater-item" style="padding:14px 16px;margin-bottom:8px;">
+          <div style="display:flex;gap:16px;align-items:center;">
+            <span style="font-size:13px;font-weight:600;min-width:140px;">${labels[i] || "Badge " + (i + 1)}</span>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <label style="font-size:12px;margin:0;text-transform:none;letter-spacing:0;">Start:</label>
+              <input type="color" value="${b.start}" style="width:36px;height:36px;border:none;border-radius:6px;cursor:pointer;padding:2px;background:transparent;" onchange="cfg.theme.badgeColors[${i}].start=this.value" />
+            </div>
+            <div style="display:flex;align-items:center;gap:8px;">
+              <label style="font-size:12px;margin:0;text-transform:none;letter-spacing:0;">End:</label>
+              <input type="color" value="${b.end}" style="width:36px;height:36px;border:none;border-radius:6px;cursor:pointer;padding:2px;background:transparent;" onchange="cfg.theme.badgeColors[${i}].end=this.value" />
+            </div>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    // ══════════════════════════════════════════
+    //  SAVE — Collect form → write config.js
+    // ══════════════════════════════════════════
+    function collectFromForms() {
+      // Personal
+      cfg.personal.firstName = getVal("p-firstName");
+      cfg.personal.lastName = getVal("p-lastName");
+      cfg.personal.logoFirstLetter = getVal("p-logoFirstLetter");
+      cfg.personal.logoRest = getVal("p-logoRest");
+      cfg.personal.tagline = getVal("p-tagline");
+      cfg.personal.heroHeadline = getVal("p-heroHeadline").split("\n").filter(Boolean);
+      cfg.personal.heroAccentWord = getVal("p-heroAccentWord");
+      cfg.personal.heroDescription = getVal("p-heroDescription");
+
+      // Handle uploaded profile image
+      if (uploadedFiles.profileImage) {
+        cfg.personal.profileImage = uploadedFiles.profileImage;
+      }
+      if (uploadedFiles.cvFile) {
+        cfg.personal.cvFile = uploadedFiles.cvFile;
+      }
+
+      // About
+      cfg.about.leadText = getVal("a-leadText");
+
+      // Education
+      cfg.education.degree = getVal("edu-degree");
+      cfg.education.institution = getVal("edu-institution");
+      cfg.education.graduationDate = getVal("edu-graduationDate");
+
+      // Contact
+      cfg.contact.heading = getVal("c-heading");
+
+      // Orah
+      if (!cfg.orah) cfg.orah = {};
+      cfg.orah.enabled = document.getElementById("orahEnabled").checked;
+      cfg.orah.name = getVal("orahName");
+      cfg.orah.tagline = getVal("orahTagline");
+      cfg.orah.description = getVal("orahDesc");
+      cfg.orah.vision = getVal("orahVisionText");
+      cfg.orah.logo = getVal("orahLogoUrl");
+      cfg.orah.website = getVal("orahWebsiteUrl");
+      cfg.orah.cta = { text: getVal("orahCtaText"), url: getVal("orahCtaUrl") };
+      // Offerings collected from repeater
+      cfg.orah.offerings = [];
+      document.querySelectorAll("#orahOfferingsRepeater .repeater-item").forEach(item => {
+        cfg.orah.offerings.push({
+          icon: item.querySelector(".orah-off-icon").value,
+          title: item.querySelector(".orah-off-title").value,
+          description: item.querySelector(".orah-off-desc").value,
+        });
+      });
+
+      // Footer
+      cfg.footer.description = getVal("f-description");
+      cfg.footer.copyright = getVal("f-copyright");
+    }
+
+    function saveConfig() {
+      collectFromForms();
+
+      // Save to localStorage for persistence
+      localStorage.setItem("portfolioConfig", JSON.stringify(cfg));
+
+      showToast("success", "Changes saved! Refresh your portfolio to see updates.");
+
+      // Also refresh iframe preview if visible
+      refreshPreview();
+    }
+
+    function openPreview() {
+      // Save first so preview is up to date
+      collectFromForms();
+      localStorage.setItem("portfolioConfig", JSON.stringify(cfg));
+      window.open("index.html", "_blank");
+    }
+
+    function refreshPreview() {
+      const frame = document.getElementById("previewFrame");
+      if (frame) {
+        collectFromForms();
+        localStorage.setItem("portfolioConfig", JSON.stringify(cfg));
+        frame.src = "index.html?" + Date.now();
+      }
+    }
+
+    // ══════════════════════════════════════════
+    //  TOAST
+    // ══════════════════════════════════════════
+    function showToast(type, message) {
+      const toast = document.getElementById("toast");
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<i class="fas fa-${type === "success" ? "check-circle" : "exclamation-circle"}"></i> ${message}`;
+      toast.classList.add("show");
+      setTimeout(() => toast.classList.remove("show"), 3500);
+    }
+
+    // ══════════════════════════════════════════
+    //  MESSAGES INBOX
+    // ══════════════════════════════════════════
+    function getMessages() {
+      return JSON.parse(localStorage.getItem("portfolioMessages") || "[]");
+    }
+    function saveMessages(msgs) {
+      localStorage.setItem("portfolioMessages", JSON.stringify(msgs));
+    }
+
+    function renderMessages() {
+      const container = document.getElementById("messagesContainer");
+      const msgs = getMessages();
+      if (!msgs.length) {
+        container.innerHTML = `<p style="color:var(--admin-text-dim);text-align:center;padding:40px 0;">
+          <i class="fas fa-inbox" style="font-size:32px;display:block;margin-bottom:12px;opacity:.4;"></i>
+          No messages yet. Messages from your contact form will appear here.</p>`;
+        updateMessageBadge();
+        return;
+      }
+      // Newest first
+      container.innerHTML = msgs.slice().reverse().map((m, _idx) => {
+        const i = msgs.length - 1 - _idx; // real index
+        const date = new Date(m.timestamp).toLocaleString();
+        return `
+          <div class="msg-card ${m.read ? '' : 'unread'}">
+            <div class="msg-header">
+              <div>
+                <div class="msg-sender">${escapeHtml(m.name)}</div>
+                <div class="msg-email"><i class="fas fa-envelope" style="margin-right:4px;"></i>${escapeHtml(m.email)}</div>
+              </div>
+              <div class="msg-actions">
+                <button onclick="toggleReadMessage(${i})" title="${m.read ? 'Mark Unread' : 'Mark Read'}">
+                  <i class="fas fa-${m.read ? 'envelope' : 'envelope-open'}"></i>
+                </button>
+                <button onclick="deleteMessage(${i})" title="Delete" style="color:#ef4444;">
+                  <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+            <div class="msg-subject">${escapeHtml(m.subject || '(No subject)')}</div>
+            <div class="msg-body">${escapeHtml(m.message)}</div>
+            <div class="msg-time"><i class="fas fa-clock" style="margin-right:4px;"></i>${date}</div>
+          </div>`;
+      }).join("");
+      updateMessageBadge();
+    }
+
+    function toggleReadMessage(idx) {
+      const msgs = getMessages();
+      if (msgs[idx]) {
+        msgs[idx].read = !msgs[idx].read;
+        saveMessages(msgs);
+        renderMessages();
+      }
+    }
+
+    function deleteMessage(idx) {
+      if (!confirm("Delete this message?")) return;
+      const msgs = getMessages();
+      msgs.splice(idx, 1);
+      saveMessages(msgs);
+      renderMessages();
+      showToast("success", "Message deleted.");
+    }
+
+    function markAllRead() {
+      const msgs = getMessages();
+      msgs.forEach(m => m.read = true);
+      saveMessages(msgs);
+      renderMessages();
+      showToast("success", "All messages marked as read.");
+    }
+
+    function clearAllMessages() {
+      if (!confirm("Delete ALL messages? This cannot be undone.")) return;
+      saveMessages([]);
+      renderMessages();
+      showToast("success", "All messages cleared.");
+    }
+
+    function updateMessageBadge() {
+      const badge = document.getElementById("msgBadge");
+      if (!badge) return;
+      const unread = getMessages().filter(m => !m.read).length;
+      badge.textContent = unread;
+      badge.classList.toggle("hidden", unread === 0);
+    }
+
+    function escapeHtml(str) {
+      const d = document.createElement("div");
+      d.textContent = str || "";
+      return d.innerHTML;
+    }
+
+    // ══════════════════════════════════════════
+    //  EMAIL SETUP (EmailJS)
+    // ══════════════════════════════════════════
+    function loadEmailSettings() {
+      const saved = JSON.parse(localStorage.getItem("portfolioEmailJS") || "{}");
+      if (saved.serviceId) document.getElementById("ejs-serviceId").value = saved.serviceId;
+      if (saved.templateId) document.getElementById("ejs-templateId").value = saved.templateId;
+      if (saved.publicKey) document.getElementById("ejs-publicKey").value = saved.publicKey;
+    }
+
+    function saveEmailSettings() {
+      const data = {
+        serviceId: document.getElementById("ejs-serviceId").value.trim(),
+        templateId: document.getElementById("ejs-templateId").value.trim(),
+        publicKey: document.getElementById("ejs-publicKey").value.trim()
+      };
+      if (!data.serviceId || !data.templateId || !data.publicKey) {
+        showToast("error", "Please fill in all three fields.");
+        return;
+      }
+      localStorage.setItem("portfolioEmailJS", JSON.stringify(data));
+      showToast("success", "Email settings saved! Contact form submissions will now be emailed to you.");
+    }
+
+    function testEmail() {
+      const data = JSON.parse(localStorage.getItem("portfolioEmailJS") || "{}");
+      if (!data.serviceId || !data.templateId || !data.publicKey) {
+        showToast("error", "Save your email settings first.");
+        return;
+      }
+      const status = document.getElementById("emailStatus");
+      status.textContent = "Sending test email...";
+      status.style.color = "var(--admin-accent)";
+      if (typeof emailjs === "undefined") {
+        status.textContent = "EmailJS library not loaded. Add the CDN to your page.";
+        status.style.color = "#ef4444";
+        return;
+      }
+      emailjs.init(data.publicKey);
+      emailjs.send(data.serviceId, data.templateId, {
+        from_name: "Admin Panel Test",
+        from_email: "test@portfolio.local",
+        subject: "Test Email from Admin Panel",
+        message: "If you received this, your EmailJS setup is working correctly! 🎉"
+      }).then(() => {
+        status.textContent = "✓ Test email sent successfully!";
+        status.style.color = "var(--admin-success)";
+      }).catch((err) => {
+        status.textContent = "✗ Failed: " + (err.text || err.message || err);
+        status.style.color = "#ef4444";
+      });
+    }
+  </script>
+</body>
+</html>
