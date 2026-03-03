@@ -22,14 +22,14 @@ const CONFIG = {
     firstName: "Trevor",
     lastName: "Kimathi",
     logoFirstLetter: "T",       // Shown in the navbar logo
-    logoRest: "K",              // Shown after the accent letter
+    logoRest: "Kim",              // Shown after the accent letter
     tagline: "Developer & Videographer",
     heroHeadline: [
       "Crafting Digital",
       "Solutions & Visual",
     ],
     heroAccentWord: "Stories.",  // The gradient-highlighted word
-    heroDescription: "I'm Trevor Kimathi — an IT specialist and creative professional who bridges technical precision with compelling visual storytelling.",
+    heroDescription: "I'm Trevor Kimathi, an IT specialist and creative professional who bridges technical precision with compelling visual storytelling.",
     profileImage: "",           // e.g. "assets/trevor-photo.jpg" — leave "" for placeholder
     cvFile: "",                 // e.g. "assets/Trevor_Kimathi_CV.pdf" — leave "" to hide download
   },
@@ -56,8 +56,8 @@ const CONFIG = {
       "From building responsive web applications to editing professional-grade video content, I bring a unique blend of left-brain logic and right-brain creativity to every project.",
     ],
     stats: [
-      { number: 10, suffix: "+", label: "Projects" },
-      { number: 5,  suffix: "+", label: "Clients"  },
+      { number: 4, suffix: "+", label: "Projects" },
+      { number: 4,  suffix: "+", label: "Clients"  },
       { number: 3,  suffix: "+", label: "Years Exp." },
     ],
   },
@@ -202,7 +202,7 @@ const CONFIG = {
   projects: [
     {
       title: "Finance Tracker App",
-      description: "A mobile-first application for financial planning and expense tracking with intuitive data visualization.",
+      description: "a personal finance management system with multi-type savings tracking, advanced analytics, and report generation; and OrahFinance Mobile—a React Native app extending personal finance management to iOS/Android with cross-platform synchronization.",
       category: "dev",
       image: "",                        // e.g. "assets/finance-tracker.jpg"
       icon: "fas fa-chart-line",        // Placeholder icon when no image
@@ -213,15 +213,15 @@ const CONFIG = {
       ],
     },
     {
-      title: "Final Year University Project",
-      description: "A complex technical solution showcasing advanced problem-solving, system design, and full-stack development.",
+      title: "Orah School",
+      description: "A comprehensive full-stack educational management platform built with JavaScript, featuring multi-role dashboards (student, instructor, admin), real-time attendance tracking, AI-powered chatbot integration, lesson management with video support, analytics dashboards, messaging systems, and theme customization.",
       category: "dev",
       image: "",
       icon: "fas fa-laptop-code",
       tags: ["React", "Node.js", "Full-Stack"],
       links: [
         { url: "#", icon: "fas fa-external-link-alt" },
-        { url: "https://github.com/2COR515", icon: "fab fa-github" },
+        { url: "https://2cor515.github.io/orah_school/index.html", icon: "fab fa-github" },
       ],
     },
     {
