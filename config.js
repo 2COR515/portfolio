@@ -30,7 +30,7 @@ const CONFIG = {
     ],
     heroAccentWord: "Stories.",  // The gradient-highlighted word
     heroDescription: "I'm Trevor Kimathi, an IT specialist and creative professional who bridges technical precision with compelling visual storytelling.",
-    profileImage: "assets/Me(2).jpg",
+    profileImage: "assets/Me (2).jpg",
     cvFile: "",                 // e.g. "assets/Trevor_Kimathi_CV.pdf" — leave "" to hide download
   },
 
