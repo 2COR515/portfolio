@@ -978,6 +978,8 @@ select {
 
 .orah-logo {
   margin-bottom: 12px;
+   display: flex;
+  justify-content: center
 }
 
 .orah-logo img {
