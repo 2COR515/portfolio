@@ -42,8 +42,8 @@ const CONFIG = {
   socials: [
     { platform: "GitHub",   url: "https://github.com/2COR515",   icon: "fab fa-github"      },
     { platform: "Email",    url: "mailto:nitrevor01@gmail.com",   icon: "fas fa-envelope"    },
-    { platform: "LinkedIn", url: "#",                             icon: "fab fa-linkedin-in" },
-    { platform: "Twitter",  url: "#",                             icon: "fab fa-twitter"     },
+    { platform: "LinkedIn", url: "www.linkedin.com/in/waichongo", icon: "fab fa-linkedin-in" },
+    { platform: "X",  url: "#",                             icon: "fab fa-X"     },
   ],
 
   /* ─────────────────────────────────────────
@@ -202,7 +202,7 @@ const CONFIG = {
   projects: [
     {
       title: "Finance Tracker App",
-      description: "a personal finance management system with multi-type savings tracking, advanced analytics, and report generation; and OrahFinance Mobile—a React Native app extending personal finance management to iOS/Android with cross-platform synchronization.",
+      description: "A personal finance management system with multi-type savings tracking, advanced analytics, and report generation; and OrahFinance Mobile—a React Native app extending personal finance management to iOS/Android with cross-platform synchronization.",
       category: "dev",
       image: "",                        // e.g. "assets/finance-tracker.jpg"
       icon: "fas fa-chart-line",        // Placeholder icon when no image
@@ -268,7 +268,7 @@ const CONFIG = {
       icon: "fas fa-tools",
       type: "bar",
       skills: [
-        { name: "Adobe Premiere Pro", level: 88 },
+        { name: "Adobe Premiere Pro", level: 80 },
         { name: "CapCut",             level: 92 },
         { name: "GitHub",             level: 80 },
       ],
