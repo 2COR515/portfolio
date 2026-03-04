@@ -43,7 +43,7 @@ const CONFIG = {
     { platform: "GitHub",   url: "https://github.com/2COR515",   icon: "fab fa-github"      },
     { platform: "Email",    url: "mailto:nitrevor01@gmail.com",   icon: "fas fa-envelope"    },
     { platform: "LinkedIn", url: "https://www.linkedin.com/in/waichongo", icon: "fab fa-linkedin-in" },
-    { platform: "X",  url: "#",                             icon: "fab fa-x-twitter"     },
+    { platform: "X",  url: "https://x.com/TrevorKima48487",  icon: "fab fa-x-twitter"     },
   ],
 
   /* ─────────────────────────────────────────
