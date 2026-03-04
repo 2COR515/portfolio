@@ -154,7 +154,7 @@ const CONFIG = {
     tagline: "Creative & Digital Solutions Agency",
     description: "Orah is a creative agency I founded to help businesses and brands grow through compelling digital experiences. We combine technology, design, and storytelling to deliver solutions that make an impact.",
     vision: "To become a leading creative and digital solutions company in East Africa — empowering brands with world-class web development, video production, and digital marketing.",
-    logo: "",              // e.g. "assets/orah-logo.png" — leave "" for text fallback
+    logo: "assets/ORAH logo.png",
     website: "",           // e.g. "https://orah.co.ke" — leave "" to hide link
     offerings: [
       {
